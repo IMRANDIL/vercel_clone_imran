@@ -8,8 +8,6 @@ const Redis = require('ioredis');
 const subscriber = new Redis(process.env.redisURI);
 
 
-
-
 const app = express();
 
 const PORT = process.env.PORT || 9000;
@@ -20,7 +18,6 @@ const io = new Server({cors:'*'})
 io.on('connection', (socket)=>{
   socket.on('subscribe', (channel)=>{
     socket.join(channel);
-
     socket.emit('message', `Joined ${channel}`)
   })
 })
@@ -105,10 +102,6 @@ app.post("/project", async (req, res) => {
     }
   })
 });
-
-
-
-
 
 
 
