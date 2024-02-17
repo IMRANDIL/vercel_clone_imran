@@ -16,6 +16,15 @@ app.use((req, res)=>{
     const resolvesTo = `${baseURI}/${subDomain}`;
 
     return proxy.web(req,res, {target: resolvesTo, changeOrigin: true})
+});
+
+proxy.on('proxyReq', (proxyReq, req, res)=>{
+    const url = req.url;
+
+    if(url == '/') {
+        proxyReq.path += 'index.html';
+      
+    }
 })
 
 
