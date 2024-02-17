@@ -77,7 +77,8 @@ const s3Client = new S3Client({
             }
             publishLog(`Done`)
             console.log('Done...');
-            resolve()
+            resolve();
+            process.exit(0)
         });
 
       });
