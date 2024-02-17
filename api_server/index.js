@@ -2,9 +2,32 @@ const express = require("express");
 require('dotenv').config()
 const { generateSlug } = require("random-word-slugs");
 const { ECSClient, RunTaskCommand } = require("@aws-sdk/client-ecs");
+const {Server} = require('socket.io');
+const Redis = require('ioredis');
+
+const subscriber = new Redis(process.env.redisURI);
+
+
+
+
 const app = express();
 
 const PORT = process.env.PORT || 9000;
+
+const io = new Server({cors:'*'})
+
+
+io.on('connection', (socket)=>{
+  socket.on('subscribe', (channel)=>{
+    socket.join(channel);
+
+    socket.emit('message', `Joined ${channel}`)
+  })
+})
+
+
+
+io.listen(9001, ()=>console.log(`Socket server started on port:9001`))
 
 app.use(express.json());
 const config = { 
@@ -12,6 +35,7 @@ const config = {
     "arn:aws:ecs:us-east-1:202650939127:cluster/vercel-deployment-imran-cluster",
   TASK: "arn:aws:ecs:us-east-1:202650939127:task-definition/builder-task",
 };
+
 const ecsClient = new ECSClient({
   region: process.env.region,
   credentials: {
