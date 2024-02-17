@@ -9,9 +9,16 @@ RUN apt-get update && \
 
 WORKDIR /home/app
 
-# Copy both main.sh and script.js into the container
+# Copy main.sh, script.js, and package*.json files into the container
 COPY main.sh main.sh
 COPY script.js script.js
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the files
+COPY . .
 
 # Set permissions for main.sh and script.js
 RUN chmod +x main.sh

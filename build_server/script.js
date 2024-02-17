@@ -6,10 +6,10 @@ const {S3Client, PutObjectCommand} = require('@aws-sdk/client-s3')
 
 
 const s3Client = new S3Client({
-    region: '',
+    region: process.env.region,
     credentials: {
-        accessKeyId: '',
-        secretAccessKey: ''
+        accessKeyId: process.env.accessKeyId,
+        secretAccessKey: process.env.secretAccessKey
     }
 })
 
@@ -50,8 +50,9 @@ const PROJECT_ID = process.env.PROJECT_ID;
             if(fs.lstatSync(filePath).isDirectory) {
                 continue;
             }
+            console.log('Uploading', filePath)
             const putCommandForS3 = new PutObjectCommand({
-                Bucket: '',
+                Bucket: 'vercel-clone-imran',
                 Key: `__outputs/${PROJECT_ID}/${filePath}`,
                 Body: fs.createReadStream(filePath),
                 ContentType:mime.lookup(filePath)
@@ -64,6 +65,7 @@ const PROJECT_ID = process.env.PROJECT_ID;
                 console.error(`Error uploading ${filePath} to S3:`, error);
             }
         }
+        console.log('Done')
     } catch (error) {
         console.error('Error:', error.message);
     }
