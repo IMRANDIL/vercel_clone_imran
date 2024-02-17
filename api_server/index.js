@@ -106,6 +106,22 @@ app.post("/project", async (req, res) => {
   })
 });
 
+
+
+
+
+
+
+const startSubscribingRedis = async ()=>{
+  console.log('Subscribed to logs....')
+  subscriber.psubscribe('logs:*');
+  subscriber.on('pmessage', (pattern, channel, message)=>{
+    io.to(channel).emit('message', message)
+  })
+}
+
+startSubscribingRedis();
+
 app.listen(PORT, () => {
   console.log(`API Server running on port:${PORT}`);
 });
