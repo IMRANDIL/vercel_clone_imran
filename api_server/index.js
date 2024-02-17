@@ -1,7 +1,7 @@
 const express = require("express");
 require('dotenv').config()
 const { generateSlug } = require("random-word-slugs");
-const { ECSClient, RunTaskCommand } = require("@aws-sdk/client-ecs");
+const { ECSClient, RunTaskCommand, StopTaskCommand } = require("@aws-sdk/client-ecs");
 const {Server} = require('socket.io');
 const Redis = require('ioredis');
 
@@ -92,8 +92,12 @@ app.post("/project", async (req, res) => {
     }
   });
 
+
   //send the command now
   await ecsClient.send(command);
+
+  // Schedule stopping the ECS task after 10 minutes (600000 milliseconds)
+  stopTaskAfterDelay(config.CLUSTER, config.TASK, 600000);
   res.json({
     status: 'queued',
     data: {
@@ -112,6 +116,22 @@ const startSubscribingRedis = async ()=>{
     io.to(channel).emit('message', message)
   })
 }
+
+const stopTaskAfterDelay = (cluster, taskDefinition, delay) => {
+  setTimeout(async () => {
+    try {
+      // Stop or terminate the ECS task
+    const stopTaskCommand = new StopTaskCommand({
+      cluster: cluster,
+      taskDefinition: taskDefinition,
+    });
+      await ecsClient.send(stopTaskCommand);
+      console.log('ECS task stopped or terminated after delay.');
+    } catch (error) {
+      console.error('Error stopping or terminating ECS task after delay:', error);
+    }
+  }, delay);
+};
 
 startSubscribingRedis();
 
