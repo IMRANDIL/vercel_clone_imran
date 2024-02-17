@@ -46,7 +46,7 @@ const PROJECT_ID = process.env.PROJECT_ID;
               console.log("Uploading", filePath);
               const putCommandForS3 = new PutObjectCommand({
                 Bucket: "vercel-clone-imran",
-                Key: `__outputs/${PROJECT_ID}/${filePath}`,
+                Key: `__outputs/${PROJECT_ID}/${file}`,
                 Body: fs.createReadStream(filePath),
                 ContentType: mime.lookup(filePath),
               });
