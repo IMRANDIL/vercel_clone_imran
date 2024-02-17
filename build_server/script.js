@@ -2,6 +2,20 @@ const { exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
+const {S3Client, PutObjectCommand} = require('@aws-sdk/client-s3')
+
+
+const s3Client = new S3Client({
+    region: '',
+    credentials: {
+        accessKeyId: '',
+        secretAccessKey: ''
+    }
+})
+
+const PROJECT_ID = process.env.PROJECT_ID;
+
+
 (async () => {
     console.log('Executing script.js');
     
@@ -36,7 +50,10 @@ const fs = require('fs');
             if(fs.lstatSync(filePath).isDirectory) {
                 continue;
             }
-            
+            const putCommandForS3 = new PutObjectCommand({
+                Bucket: '',
+                Key: ``
+            })
         }
     } catch (error) {
         console.error('Error:', error.message);
