@@ -42,8 +42,8 @@ const ecsClient = new ECSClient({
 });
 
 app.post("/project", async (req, res) => {
-  const { gitUrl } = req.body;
-  const projectSlug = generateSlug();
+  const { gitUrl, slug } = req.body;
+  const projectSlug =slug ? slug :generateSlug();
   // Spin the ecs container on aws now
   const command = new RunTaskCommand({
     cluster: config.CLUSTER,
