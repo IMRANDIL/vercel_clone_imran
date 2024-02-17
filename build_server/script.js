@@ -1,7 +1,7 @@
 const { exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
-
+const mime = require('mime-types')
 const {S3Client, PutObjectCommand} = require('@aws-sdk/client-s3')
 
 
@@ -52,8 +52,17 @@ const PROJECT_ID = process.env.PROJECT_ID;
             }
             const putCommandForS3 = new PutObjectCommand({
                 Bucket: '',
-                Key: ``
-            })
+                Key: `__outputs/${PROJECT_ID}/${filePath}`,
+                Body: fs.createReadStream(filePath),
+                ContentType:mime.lookup(filePath)
+            });
+
+            try {
+                await s3Client.send(putCommandForS3);
+                console.log(`Uploaded ${filePath} to S3`);
+            } catch (error) {
+                console.error(`Error uploading ${filePath} to S3:`, error);
+            }
         }
     } catch (error) {
         console.error('Error:', error.message);
