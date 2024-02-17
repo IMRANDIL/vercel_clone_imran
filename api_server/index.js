@@ -7,7 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 9000;
 
 app.use(express.json());
-const config = {
+const config = { 
   CLUSTER:
     "arn:aws:ecs:us-east-1:202650939127:cluster/vercel-deployment-imran-cluster",
   TASK: "arn:aws:ecs:us-east-1:202650939127:task-definition/builder-task",
@@ -68,7 +68,14 @@ app.post("/project", async (req, res) => {
   });
 
   //send the command now
-  await ecsClient.send(command)
+  await ecsClient.send(command);
+  res.json({
+    status: 'queued',
+    data: {
+        projectSlug,
+        url: `http://${projectSlug}.localhost:8000`
+    }
+  })
 });
 
 app.listen(PORT, () => {
