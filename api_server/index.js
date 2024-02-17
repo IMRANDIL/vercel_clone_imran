@@ -103,7 +103,7 @@ app.post("/project", async (req, res) => {
   const data = await ecsClient.send(command);
   const taskId = data.tasks[0].taskArn.split("/").pop(); // Extract the task ID from the task ARN
   // Schedule stopping the ECS task after 5 minutes (300000 milliseconds)
-  stopTaskAfterDelay(config.CLUSTER, taskId, 300000);
+  // stopTaskAfterDelay(config.CLUSTER, taskId, 300000); //no need to call this now.. used process.exit in build server
   res.json({
     status: "queued",
     data: {
