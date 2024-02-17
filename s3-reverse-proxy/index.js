@@ -20,10 +20,8 @@ app.use((req, res)=>{
 
 proxy.on('proxyReq', (proxyReq, req, res)=>{
     const url = req.url;
-
     if(url == '/') {
-        proxyReq.path += 'index.html';
-      
+        proxyReq.path += 'index.html';  
     }
 })
 
