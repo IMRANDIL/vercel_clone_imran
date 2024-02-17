@@ -60,6 +60,10 @@ app.post("/project", async (req, res) => {
                     {
                         name: 'secretAccessKey',
                         value: process.env.secretAccessKey
+                    },
+                    {
+                      name: 'redisURI',
+                      value: process.env.redisURI
                     }
                 ]
             }
